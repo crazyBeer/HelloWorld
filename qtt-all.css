@@ -1,0 +1,9 @@
+.hidden{
+    display: hidden;
+}
+
+/* pagebar 禁用按钮样式 */
+.t_pagebar .disabled_button{
+    background:#cccccc;
+    cursor: default;
+}

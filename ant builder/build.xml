@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<project name='T' basedir='.'>
+    <property name='build' value='../../t-lib/build'/>
+    <property name="jsdir" value="${build}/js"/>
+
+    <delete dir="${build}"/><!-- 生成前清理build目录 -->
+
+    <!-- 使用JSA压缩合并js -->
+    <taskdef resource="jst-task.properties" classpath="lib/JSA.jar" />
+    <jscompress destDir="${jsdir}" charset="utf-8"
+          allInOneFileName="qtt-all-debug.js"
+          syntaxcompression="false"
+          textcompression="false"
+          compatible="false">
+      <fileset dir="../../t-lib/js">
+        <include name="T.core.js" /> <!-- 先加core -->
+      </fileset>
+      <fileset dir="../../t-lib/js">
+        <include name="T.Observable.js" /><!-- 按顺序加Observable -->
+      </fileset>
+      <fileset dir="../../t-lib/js">
+        <include name="**/*.*" />
+        <exclude name="T.core.js" /><!-- 已合并的js不再次合并 -->
+        <exclude name="T.Observable.js" />
+      </fileset>
+    </jscompress>
+    <copy file="${jsdir}/qtt-all-debug.js" todir="../../t-lib"/><!-- 拷贝一份压缩后的js到源路径 -->
+    <jscompress destDir="${jsdir}" charset="utf-8"
+          allInOneFileName="qtt-all.js"
+          syntaxcompression="true"
+          textcompression="false"
+          compatible="true">
+      <fileset dir="${jsdir}">
+        <include name="qtt-all-debug.js" />
+      </fileset>
+    </jscompress>
+
+    <!-- 将其它目录及文件拷贝到build目录 -->
+    <copy file="${jsdir}/qtt-all.js" todir="../../t-lib"/><!-- 拷贝一份压缩后的js到源路径 -->
+    
+    <delete includeEmptyDirs="true">
+       <fileset dir="${jsdir}" includes="**/*.*">
+         <exclude name="t-all.js" />
+         <exclude name="t-all-debug.js" />
+       </fileset>
+    </delete>
+    <delete dir="${jsdir}/ext"/>
+</project>
